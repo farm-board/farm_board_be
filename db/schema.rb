@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_01_204831) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_05_195918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accommodations", force: :cascade do |t|
+    t.boolean "housing"
+    t.boolean "transportation"
+    t.boolean "meals"
+    t.string "images"
+    t.bigint "farm_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["farm_id"], name: "index_accommodations_on_farm_id"
+  end
 
   create_table "employees", force: :cascade do |t|
     t.string "first_name", null: false
@@ -88,6 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_01_204831) do
     t.index ["employee_id"], name: "index_references_on_employee_id"
   end
 
+  add_foreign_key "accommodations", "farms"
   add_foreign_key "experiences", "employees"
   add_foreign_key "posting_employees", "employees"
   add_foreign_key "posting_employees", "postings"
