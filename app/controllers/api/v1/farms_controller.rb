@@ -11,7 +11,7 @@ class Api::V1::FarmsController < ApplicationController
   end
 
   def create
-    begin 
+    begin
         render json: FarmSerializer.new(Farm.create!(farm_params)), status: :created
     end
   end
