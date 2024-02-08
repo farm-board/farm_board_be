@@ -67,7 +67,7 @@ RSpec.describe "Farm API", type: :request do
         expect(response.status).to eq(422)
       end
 
-      it 'returns a 404 if the farm email/phone already exists' do
+      it 'returns a 422 if the farm email/phone already exists' do
         farm_params = { name: "Dylan's Farm", location: "Colorado", email: @farm_1.email, phone: @farm_1.phone, image: "image here", bio: "bio here" }
         post '/api/v1/farms', params: farm_params
 
