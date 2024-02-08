@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :farms do
         resource :accommodation
       end
+      resources :employees
     end
   end
 end
