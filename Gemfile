@@ -36,8 +36,6 @@ gem 'jsonapi-serializer'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
-gem 'sprockets-rails'
-
 gem "figaro"
 
 group :development, :test do
