@@ -2,7 +2,7 @@ class Api::V1::ExperiencesController < ApplicationController
     before_action :get_employee
 
     def index
-        render json: ExperienceSerializer.new(Experience.all)
+        render json: ExperienceSerializer.new(@employee.experiences)
     end
 
     def show
