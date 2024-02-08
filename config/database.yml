@@ -83,6 +83,4 @@ test:
 #
 production:
   <<: *default
-  database: farm_board_be_production
-  username: farm_board_be
-  password: <%= ENV["FARM_BOARD_BE_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
