@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       end
       resources :employees do 
         resources :experiences
+        resources :references
       end
     end
   end
