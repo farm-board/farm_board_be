@@ -46,7 +46,7 @@ RSpec.describe 'Api::V1::Experiences', type: :request do
     end
 
     it 'returns a 422 status if creation fails' do
-      invalid_params = { company_name: '', started_at: '2023-01-01', ended_at: '2023-02-01', description: 'New description' }
+      invalid_params = { started_at: '2023-01-01', ended_at: '2023-02-01', description: 'New description' }
       post "/api/v1/employees/#{employee.id}/experiences", params: invalid_params
 
       expect(response.status).to eq(422)
