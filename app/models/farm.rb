@@ -7,7 +7,5 @@ class Farm < ApplicationRecord
   validates :location, presence: true
   validates :email, presence: true
   validates :phone, presence: true
-  validates :image,
-  validates :bio, presence: true
 
 end
