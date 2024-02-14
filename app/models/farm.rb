@@ -8,6 +8,6 @@ class Farm < ApplicationRecord
   validates :email, presence: true
   validates :phone, presence: true
   validates :image,
-  validates :bio
-  
+  validates :bio,
+
 end
