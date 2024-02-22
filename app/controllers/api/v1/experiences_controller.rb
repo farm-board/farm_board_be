@@ -62,7 +62,8 @@ class Api::V1::ExperiencesController < ApplicationController
     private
 
         def get_employee
-            @employee = Employee.find(params[:employee_id])
+            @user = User.find(params[:user_id])
+            @employee = @user.employee
         end
 
         def experience_params
