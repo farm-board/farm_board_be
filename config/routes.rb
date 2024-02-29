@@ -5,11 +5,21 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users do
-        resource :farms do
+        resources :farms do
+          member do
+            get 'image', to: 'farms#show_image'
+            get 'gallery_photos', to: 'farms#gallery_photos'
+          end
+          post 'upload_image', to: 'farms#upload_image'
+          post 'upload_gallery_photo', to: 'farms#upload_gallery_photo'
           resources :postings
           resource :accommodation
         end
-        resource :employees do
+        resources :employees do
+          member do
+            get 'image', to: 'employees#show_image'
+          end
+          post 'upload_image', to: 'employees#upload_image'
           resources :experiences
           resources :references
         end
