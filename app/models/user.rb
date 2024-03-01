@@ -9,4 +9,16 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
         :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
+  def employee_destruction
+    employee.references.destroy_all if employee&.references
+    employee.experiences.destroy_all if employee&.experiences
+    employee.destroy if employee
+  end
+
+  def farm_destruction
+    farm.accommodation.destroy_all if farm&.accommodation
+    farm.postings.destroy_all if farm&.postings
+    farm.destroy if farm
+  end
+
 end

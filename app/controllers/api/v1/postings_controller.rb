@@ -34,7 +34,8 @@ class Api::V1::PostingsController < ApplicationController
 private
 
   def get_farm
-    @farm = Farm.find(params[:farm_id])
+    @user = User.find(params[:user_id])
+    @farm = @user.farm
   end
 
   def posting_params
