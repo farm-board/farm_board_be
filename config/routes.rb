@@ -12,6 +12,9 @@ Rails.application.routes.draw do
           end
           post 'upload_image', to: 'farms#upload_image'
           post 'upload_gallery_photo', to: 'farms#upload_gallery_photo'
+          put 'update_gallery_photo', to: 'farms#update_gallery_photo'
+          delete 'delete_image', to: 'farms#delete_image'
+          delete 'delete_gallery_photo', to: 'farms#delete_gallery_photo'
           resources :postings
           resource :accommodation
         end

@@ -1,17 +1,35 @@
 class Api::V1::FarmsController < ApplicationController
   before_action :get_user
- 
-
+  
+  
   # GET /api/v1/users/:user_id/farms
   def index
     render json: FarmSerializer.new(Farm.all)
   end
-
+  
   # GET /api/v1/users/:user_id/farms/:id
   def show
     render json: FarmSerializer.new(@user.farm)
   end
 
+  
+  # PATCH/PUT /api/v1/users/:user_id/farms/:id
+  def update
+    if @farm.update(farm_params)
+      render json: FarmSerializer.new(@farm), status: :accepted
+    else
+      render json: { errors: @farm.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+  
+  # DELETE /api/v1/users/:user_id/farms/:id
+  def destroy
+    @farm.destroy
+    head :no_content
+  end
+  
+  ### AWS S3 Controller Methods ###
+  
   # POST /api/v1/users/:user_id/farms/:id/upload_image
   def upload_image
     @farm = Farm.find_by(id: params[:farm_id])
@@ -36,6 +54,22 @@ class Api::V1::FarmsController < ApplicationController
     image_url = url_for(@farm.profile_image)
 
     render json: { image_url: image_url }, status: :ok
+  end
+
+  # DELETE /api/v1/users/:user_id/farms/:id/delete_image
+  def delete_image
+    @farm = Farm.find_by(id: params[:id])
+    unless @farm
+      render json: { error: "Farm not found" }, status: :not_found
+      return
+    end
+
+    if @farm.profile_image.attached?
+      @farm.profile_image.purge  
+      render json: { message: "Image deleted successfully" }, status: :ok
+    else
+      render json: { error: "No image attached to delete" }, status: :unprocessable_entity
+    end
   end
 
   # GET /api/v1/users/:user_id/farms/:id/gallery_photos
@@ -71,20 +105,46 @@ class Api::V1::FarmsController < ApplicationController
     render json: { message: "Gallery photo uploaded successfully" }, status: :ok
   end
 
-  # PATCH/PUT /api/v1/users/:user_id/farms/:id
-  def update
-    if @farm.update(farm_params)
-      render json: FarmSerializer.new(@farm), status: :accepted
+  # DELETE /api/v1/users/:user_id/farms/:id/gallery_photos/:photo_id
+  def delete_gallery_photo
+    @farm = Farm.find_by(id: params[:id])
+    unless @farm
+      render json: { error: "Farm not found" }, status: :not_found
+      return
+    end
+
+    photo = @farm.gallery_photos.find_by(id: params[:photo_id])
+    unless photo
+      render json: { error: "Photo not found" }, status: :not_found
+      return
+    end
+
+    photo.purge 
+
+    render json: { message: "Photo deleted successfully" }, status: :ok
+  end
+
+  # PATCH /api/v1/users/:user_id/farms/:id/gallery_photos/:photo_id
+  def update_gallery_photo
+    @farm = Farm.find_by(id: params[:id])
+    unless @farm
+      render json: { error: "Farm not found" }, status: :not_found
+      return
+    end
+
+    photo = @farm.gallery_photos.find_by(id: params[:photo_id])
+    unless photo
+      render json: { error: "Photo not found" }, status: :not_found
+      return
+    end
+
+    if photo.update(photo_params)
+      render json: { message: "Photo updated successfully" }, status: :ok
     else
-      render json: { errors: @farm.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: photo.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-  # DELETE /api/v1/users/:user_id/farms/:id
-  def destroy
-    @farm.destroy
-    head :no_content
-  end
 
   private
 
@@ -94,5 +154,9 @@ class Api::V1::FarmsController < ApplicationController
 
   def farm_params
     params.require(:farm).permit(:name, :city, :state, :zip_code, :bio)
+  end
+
+  def photo_params
+    params.require(:photo).permit(:title, :description, :tags)
   end
 end
