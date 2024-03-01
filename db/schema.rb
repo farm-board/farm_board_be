@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_16_153402) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_20_203046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,18 +26,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_16_153402) do
   end
 
   create_table "employees", force: :cascade do |t|
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.string "phone", null: false
-    t.string "email", null: false
-    t.string "location"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
     t.text "skills", default: [], array: true
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "age"
-    t.index ["email"], name: "index_employees_on_email", unique: true
-    t.index ["phone"], name: "index_employees_on_phone", unique: true
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
   create_table "experiences", force: :cascade do |t|
@@ -52,16 +52,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_16_153402) do
   end
 
   create_table "farms", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "location", null: false
-    t.string "email", null: false
-    t.string "phone", null: false
+    t.string "name"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
     t.string "image"
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_farms_on_email", unique: true
-    t.index ["phone"], name: "index_farms_on_phone", unique: true
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_farms_on_user_id"
   end
 
   create_table "posting_employees", force: :cascade do |t|
@@ -111,13 +111,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_16_153402) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "jti", null: false
+    t.integer "role_type", default: 0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "accommodations", "farms"
+  add_foreign_key "employees", "users"
   add_foreign_key "experiences", "employees"
+  add_foreign_key "farms", "users"
   add_foreign_key "posting_employees", "employees"
   add_foreign_key "posting_employees", "postings"
   add_foreign_key "postings", "farms"

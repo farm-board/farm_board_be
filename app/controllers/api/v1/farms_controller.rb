@@ -1,37 +1,38 @@
 class Api::V1::FarmsController < ApplicationController
+  before_action :get_user
+
   def index
     render json: FarmSerializer.new(Farm.all)
   end
 
   def show
-    farm = Farm.find(params[:id])
     begin
-        render json: FarmSerializer.new(farm)
-    end
-  end
-
-  def create
-    begin
-        render json: FarmSerializer.new(Farm.create!(farm_params)), status: :created
+        render json: FarmSerializer.new(@user.farm)
     end
   end
 
   def update
+    farm = @user.farm
     begin
-        render json: FarmSerializer.new(Farm.update!(params[:id], farm_params)), status: :accepted
+        farm.update!(farm_params)
+        render json: FarmSerializer.new(farm), status: :accepted
     end
   end
 
   def destroy
-    farm = Farm.find(params[:id])
     begin
-        render json: FarmSerializer.new(farm.destroy), status: :no_content
+        render json: FarmSerializer.new(@user.farm.destroy), status: :no_content
     end
   end
 
 
 private
+
+  def get_user
+    @user = User.find(params[:user_id])
+  end
+
   def farm_params
-    params.permit(:name, :location, :email, :phone, :image, :bio)
+    params.require(:farm).permit(:name, :city, :state, :zip_code, :bio)
   end
 end

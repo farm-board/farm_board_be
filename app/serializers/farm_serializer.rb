@@ -1,4 +1,5 @@
 class FarmSerializer
   include JSONAPI::Serializer
-  attributes :name, :location, :email, :phone, :image, :bio
+  set_id :id
+  attributes :name, :city, :state, :zip_code, :image, :bio
 end
