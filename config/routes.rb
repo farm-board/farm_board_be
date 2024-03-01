@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users do
-        resources :farms do
+        resource :farms do
           member do
             get 'image', to: 'farms#show_image'
             get 'gallery_photos', to: 'farms#gallery_photos'
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
           resources :postings
           resource :accommodation
         end
-        resources :employees do
+        resource :employees do
           member do
             get 'image', to: 'employees#show_image'
           end

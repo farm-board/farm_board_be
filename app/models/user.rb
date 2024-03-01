@@ -16,7 +16,7 @@ class User < ApplicationRecord
   end
 
   def farm_destruction
-    farm.accommodation.destroy_all if farm&.accommodation
+    farm.accommodation.destroy if farm&.accommodation
     farm.postings.destroy_all if farm&.postings
     farm.destroy if farm
   end
