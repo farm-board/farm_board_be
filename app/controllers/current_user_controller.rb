@@ -8,11 +8,11 @@ class CurrentUserController < ApplicationController
     if current_user.update!(user_params)
       case current_user.role_type
       when 'farm'
-        current_user.employee.destroy if current_user.employee
+        current_user.employee_destruction if current_user.employee
         Farm.create(user: current_user)
         render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
       when 'employee'
-        current_user.farm.destroy if current_user.farm
+        current_user.farm_destruction if current_user.farm
         Employee.create(user: current_user)
         render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
       end
