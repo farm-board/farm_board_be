@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout', sign_up: 'signup' }, controllers: { sessions: 'users/sessions', registrations: 'users/registrations' }
   namespace :api do
     namespace :v1 do
+      resource :feed
       resources :users do
         resource :farms do
           member do
@@ -14,8 +15,13 @@ Rails.application.routes.draw do
           post 'upload_gallery_photo', to: 'farms#upload_gallery_photo'
           put 'update_gallery_photo', to: 'farms#update_gallery_photo'
           delete 'delete_image', to: 'farms#delete_image'
-          delete 'delete_gallery_photo', to: 'farms#delete_gallery_photo'
-          resources :postings
+          delete 'delete_gallery_photo/:photo_id', to: 'farms#delete_gallery_photo'
+          resources :postings do
+            member do
+              post 'apply'
+              get 'applicants'
+            end
+          end
           resource :accommodation
         end
         resource :employees do

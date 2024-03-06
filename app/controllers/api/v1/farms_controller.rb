@@ -76,7 +76,10 @@ class Api::V1::FarmsController < ApplicationController
     end
 
     gallery_photo_urls = @farm.gallery_photos.map do |photo|
-      url_for(photo)
+      {
+        url: url_for(photo),
+        id: photo.id
+      }
     end
 
     render json: { gallery_photos: gallery_photo_urls }, status: :ok
