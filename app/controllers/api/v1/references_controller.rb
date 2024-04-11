@@ -56,7 +56,7 @@ class Api::V1::ReferencesController < ApplicationController
     private
 
     def reference_params
-      params.permit(:first_name, :last_name, :email, :phone, :relationship, :employee_id)
+      params.require(:reference).permit(:first_name, :last_name, :email, :phone, :relationship, :employee_id)
     end
 
     def get_employee
