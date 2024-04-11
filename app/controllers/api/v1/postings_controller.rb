@@ -39,7 +39,9 @@ class Api::V1::PostingsController < ApplicationController
 
   def update
     begin
-        render json: PostingsSerializer.new(@farm.postings.update!(params[:id], posting_params)), status: :accepted
+      posting = @farm.postings.find(params[:id])
+      posting.update!(posting_params)
+      render json: PostingsSerializer.new(posting), status: :accepted
     end
   end
 
@@ -60,6 +62,18 @@ private
   end
 
   def posting_params
-    params.permit(:farm_id, :title, :description, :salary, :offers_lodging, :images, :duration, :age_requirement, :payment_type, skill_requirements: [])
+    params.require(:posting).permit(
+      attributes: [
+        :title,
+        :description,
+        :salary,
+        :offers_lodging,
+        :images,
+        :duration,
+        :age_requirement,
+        :payment_type,
+        skill_requirements: []
+      ]
+    )
   end
 end
