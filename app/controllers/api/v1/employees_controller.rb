@@ -1,4 +1,19 @@
 class Api::V1::EmployeesController < ApplicationController
+
+    def profile_info
+      employee = Employee.find_by(id: params[:id])
+      # Check if the employee has a main image attached
+      if employee.main_image.attached?
+        image_url = url_for(employee.main_image)
+      else
+        image_url = nil # Or provide a default image URL
+      end
+      # Add the image URL to the employee attributes
+      employee_data = employee.as_json.merge(image_url: image_url, experiences: employee.experiences, references: employee.references)
+
+      render json: EmployeeProfileSerializer.new(employee_data).serializable_hash
+    end
+
     before_action :get_employee
 
     def index

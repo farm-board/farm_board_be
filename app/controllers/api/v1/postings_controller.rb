@@ -17,11 +17,20 @@ class Api::V1::PostingsController < ApplicationController
   def applicants
     employees = []
     posting = @farm.postings.find(params[:id])
-    applicants = posting.posting_employees 
+    applicants = posting.posting_employees
     applicants.each do |applicant|
-      employees << Employee.find(applicant.employee_id)
+      employee = Employee.find(applicant.employee_id)
+      # Check if the employee has a main image attached
+      if employee.main_image.attached?
+        image_url = url_for(employee.main_image)
+      else
+        image_url = nil # Or provide a default image URL
+      end
+      # Add the image URL to the employee attributes
+      employee_data = employee.as_json.merge(image_url: image_url)
+      employees << employee_data
     end
-    render json: EmployeeSerializer.new(employees)
+    render json: ApplicantDataSerializer.new(employees).serializable_hash
   end
 
   def index
