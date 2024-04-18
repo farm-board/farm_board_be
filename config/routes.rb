@@ -31,6 +31,7 @@ Rails.application.routes.draw do
           post 'upload_image', to: 'employees#upload_image'
           resources :experiences
           resources :references
+          get '/:id/profile_info', to: 'employees#profile_info'
         end
       end
     end
