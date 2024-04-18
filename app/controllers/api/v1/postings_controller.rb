@@ -15,9 +15,13 @@ class Api::V1::PostingsController < ApplicationController
   before_action :get_farm
 
   def applicants
+    employees = []
     posting = @farm.postings.find(params[:id])
-    applicants = posting.posting_employees
-    render json: ApplicantSerializer.new(applicants)
+    applicants = posting.posting_employees 
+    applicants.each do |applicant|
+      employees << Employee.find(applicant.employee_id)
+    end
+    render json: EmployeeSerializer.new(employees)
   end
 
   def index
