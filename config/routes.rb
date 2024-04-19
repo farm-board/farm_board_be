@@ -16,6 +16,7 @@ Rails.application.routes.draw do
           put 'update_gallery_photo', to: 'farms#update_gallery_photo'
           delete 'delete_image', to: 'farms#delete_image'
           delete 'delete_gallery_photo/:photo_id', to: 'farms#delete_gallery_photo'
+          get '/:id/profile_info', to: 'farms#profile_info'
           resources :postings do
             member do
               post 'apply'

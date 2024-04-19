@@ -1,4 +1,30 @@
 class Api::V1::FarmsController < ApplicationController
+
+  def profile_info
+    farm = Farm.find_by(id: params[:id])
+    if farm.profile_image.attached?
+      image_url = url_for(farm.profile_image)
+    else
+      image_url = nil
+    end
+
+    if farm.gallery_photos.attached?
+      gallery_photos = farm.gallery_photos.map do |photo|
+        {
+          url: url_for(photo),
+          id: photo.id
+        }
+      end
+    else
+      gallery_photos = []
+    end
+  
+    farm_data = farm.as_json(only: [:id, :name, :city, :state, :zip_code, :bio]).merge(image_url: image_url, accommodations: farm.accommodation, gallery_photos: gallery_photos, postings: farm.postings)
+  
+    render json: FarmProfileSerializer.new(farm_data).serializable_hash
+  end
+
+
   before_action :get_farm
 
   # GET /api/v1/users/:user_id/farms
