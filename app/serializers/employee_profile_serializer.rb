@@ -19,7 +19,9 @@ class EmployeeProfileSerializer
         created_at: @employee_data["created_at"],
         updated_at: @employee_data["updated_at"],
         age: @employee_data["age"],
-        image_url: @employee_data[:image_url]
+        image_url: @employee_data[:image_url],
+        phone: @employee_data["phone"],
+        email: @employee_data["email"]
       },
       experiences: @employee_data[:experiences],
       references: @employee_data[:references]
