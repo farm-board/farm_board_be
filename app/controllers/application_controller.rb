@@ -12,4 +12,13 @@ class ApplicationController < ActionController::API
     render json: ErrorSerializer.new(error).serialized_json, status: 422
   end
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:account_update, keys: [:reset_password_token, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:reset_password, keys: [:reset_password_token, :password, :password_confirmation])
+  end
+
 end

@@ -27,7 +27,7 @@ class Api::V1::PostingsController < ApplicationController
         image_url = nil # Or provide a default image URL
       end
       # Add the image URL to the employee attributes
-      employee_data = employee.as_json.merge(image_url: image_url)
+      employee_data = employee.as_json.merge(image_url: image_url, created_at: applicant.created_at)
       employees << employee_data
     end
     render json: ApplicantDataSerializer.new(employees).serializable_hash
