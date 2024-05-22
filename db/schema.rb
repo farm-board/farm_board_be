@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_18_172734) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_21_223719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_18_172734) do
     t.string "phone"
     t.string "email"
     t.string "image"
+    t.boolean "setup_complete", default: false
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
@@ -93,6 +94,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_18_172734) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.json "gallery_photos"
+    t.boolean "setup_complete", default: false
     t.index ["user_id"], name: "index_farms_on_user_id"
   end
 
