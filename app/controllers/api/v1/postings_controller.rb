@@ -5,10 +5,15 @@ class Api::V1::PostingsController < ApplicationController
     @user = User.find(params[:user_id])
     current_employee = @user.employee
     if current_employee.present?
-      PostingEmployee.create(posting: @posting, employee: current_employee, notification: 'Pending')
-      render json: { message: "Application submitted successfully!" }, status: :ok
+      # Check if the user has already applied to this posting
+      if PostingEmployee.exists?(posting: @posting, employee: current_employee)
+        render json: { error: "You have already applied to this posting." }, status: :unprocessable_entity
+      else
+        PostingEmployee.create(posting: @posting, employee: current_employee, notification: 'Pending')
+        render json: { message: "Application submitted successfully!" }, status: :ok
+      end
     else
-      render json: { error: "There was an issue submitting the appliction." }, status: :no_content
+      render json: { error: "There was an issue submitting the application." }, status: :no_content
     end
   end
 
@@ -21,11 +26,7 @@ class Api::V1::PostingsController < ApplicationController
     applicants.each do |applicant|
       employee = Employee.find(applicant.employee_id)
       # Check if the employee has a main image attached
-      if employee.main_image.attached?
-        image_url = url_for(employee.main_image)
-      else
-        image_url = nil # Or provide a default image URL
-      end
+      image_url = employee.main_image.attached? ? url_for(employee.main_image) : nil
       # Add the image URL to the employee attributes
       employee_data = employee.as_json.merge(image_url: image_url, created_at: applicant.created_at)
       employees << employee_data
