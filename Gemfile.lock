@@ -174,7 +174,6 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
-    memory_profiler (1.0.1)
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
@@ -317,7 +316,6 @@ DEPENDENCIES
   figaro
   jsonapi-serializer
   kaminari
-  memory_profiler
   pg (~> 1.1)
   pry (~> 0.14.2)
   puma (>= 5.0)
