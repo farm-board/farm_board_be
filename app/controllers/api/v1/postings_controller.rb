@@ -1,74 +1,66 @@
 class Api::V1::PostingsController < ApplicationController
+  before_action :get_farm, only: [:applicants, :index, :show, :create, :update, :destroy]
 
   def apply
-    @posting = Posting.find(params[:id])
-    @user = User.find(params[:user_id])
-    current_employee = @user.employee
-    if current_employee.present?
-      # Check if the user has already applied to this posting
-      if PostingEmployee.exists?(posting: @posting, employee: current_employee)
+      posting = Posting.find_by(id: params[:id])
+      return render json: { error: "Posting not found" }, status: :not_found unless posting
+
+      user = User.find_by(id: params[:user_id])
+      return render json: { error: "User not found" }, status: :not_found unless user
+
+      employee = user.employee
+      return render json: { error: "Employee not found" }, status: :not_found unless employee
+
+      if PostingEmployee.exists?(posting: posting, employee: employee)
         render json: { error: "You have already applied to this posting." }, status: :unprocessable_entity
       else
-        PostingEmployee.create(posting: @posting, employee: current_employee, notification: 'Pending')
+        PostingEmployee.create!(posting: posting, employee: employee, notification: 'Pending')
         render json: { message: "Application submitted successfully!" }, status: :ok
       end
-    else
-      render json: { error: "There was an issue submitting the application." }, status: :no_content
-    end
   end
 
-  before_action :get_farm
 
   def applicants
-    employees = []
     posting = @farm.postings.find(params[:id])
-    applicants = posting.posting_employees
-    applicants.each do |applicant|
-      employee = Employee.find(applicant.employee_id)
-      # Check if the employee has a main image attached
+    applicants = posting.posting_employees.includes(:employee).map do |applicant|
+      employee = applicant.employee
       image_url = employee.main_image.attached? ? url_for(employee.main_image) : nil
-      # Add the image URL to the employee attributes
-      employee_data = employee.as_json.merge(image_url: image_url, created_at: applicant.created_at)
-      employees << employee_data
+      employee.as_json.merge(image_url: image_url, created_at: applicant.created_at)
     end
-    render json: ApplicantDataSerializer.new(employees).serializable_hash
+
+    render json: ApplicantDataSerializer.new(applicants).serializable_hash
   end
 
   def index
-    render json: PostingsSerializer.new(@farm.postings.all)
+    postings = @farm.postings
+    render json: PostingsSerializer.new(postings)
   end
 
   def show
     posting = @farm.postings.find(params[:id])
-    begin
-      render json: PostingsSerializer.new(posting)
-    end
+    render json: PostingsSerializer.new(posting)
   end
 
   def create
-    begin
-      render json: PostingsSerializer.new(@farm.postings.create!(posting_params)), status: :created
-    end
+    posting_attributes = posting_params
+    posting = @farm.postings.create!(posting_attributes)
+    render json: PostingsSerializer.new(posting), status: :created
   end
 
   def update
-    begin
-      posting = @farm.postings.find(params[:id])
-      posting.update!(posting_params)
-      render json: PostingsSerializer.new(posting), status: :accepted
-    end
+    posting = @farm.postings.find(params[:id])
+    posting.update!(posting_params)
+    render json: PostingsSerializer.new(posting), status: :accepted
   end
 
   def destroy
     posting = @farm.postings.find(params[:id])
     posting.posting_employees.destroy_all
-    begin
-        render json: PostingsSerializer.new(posting.destroy), status: :no_content
-    end
+    posting.destroy
+    head :no_content
   end
 
-
-private
+  private
 
   def get_farm
     @user = User.find(params[:user_id])
@@ -77,17 +69,8 @@ private
 
   def posting_params
     params.require(:posting).permit(
-      attributes: [
-        :title,
-        :description,
-        :salary,
-        :offers_lodging,
-        :images,
-        :duration,
-        :age_requirement,
-        :payment_type,
-        skill_requirements: []
-      ]
+      :title, :description, :salary, :offers_lodging, :duration, 
+      :age_requirement, :payment_type, :images, skill_requirements: []
     )
   end
 end

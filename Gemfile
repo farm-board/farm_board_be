@@ -53,6 +53,7 @@ group :development, :test do
   gem 'pry', '~> 0.14.2'
 
   gem "capybara", ">= 3.26"
+
 end
 
 group :development do
