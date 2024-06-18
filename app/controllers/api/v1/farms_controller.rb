@@ -63,7 +63,8 @@ class Api::V1::FarmsController < ApplicationController
   # GET /api/v1/users/:user_id/farms/:id/image
   def show_image
     if @farm.profile_image.attached?
-      image_url = url_for(@farm.profile_image)
+      image_path = url_for(@farm.profile_image)
+      image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(image_path).path}"
       render json: { image_url: image_url }, status: :ok
     else
       render json: { error: "Image not found" }, status: :not_found
@@ -83,7 +84,9 @@ class Api::V1::FarmsController < ApplicationController
   # GET /api/v1/users/:user_id/farms/:id/gallery_photos
   def gallery_photos
     gallery_photo_urls = @farm.gallery_photos.map do |photo|
-      { url: url_for(photo), id: photo.id }
+      image_path = url_for(photo)
+      image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(image_path).path}"
+      { url: image_url, id: photo.id }
     end
 
     render json: { gallery_photos: gallery_photo_urls }, status: :ok
