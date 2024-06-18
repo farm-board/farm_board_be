@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'http://localhost:5173, https://walrus-app-bfv5e.ondigitalocean.app'
+    origins 'http://localhost:5173', 'https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2'
 
     resource "*",
       headers: :any,
