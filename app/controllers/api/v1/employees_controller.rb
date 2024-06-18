@@ -41,7 +41,9 @@ class Api::V1::EmployeesController < ApplicationController
   # GET /api/v1/users/:user_id/employees/:id/image
   def show_image
     if @employee.main_image.attached?
-      image_url = url_for(@employee.main_image)
+      image_path = url_for(@employee.main_image)
+      # Modify the image_path to include the correct base path
+      image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(image_path).path}"
       render json: { image_url: image_url }, status: :ok
     else
       render json: { error: "Image not found" }, status: :not_found
