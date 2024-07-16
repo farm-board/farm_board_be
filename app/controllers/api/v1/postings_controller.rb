@@ -22,12 +22,15 @@ class Api::V1::PostingsController < ApplicationController
 
   def applicants
     posting = @farm.postings.find(params[:id])
+    base_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2"
+    
     applicants = posting.posting_employees.includes(:employee).map do |applicant|
       employee = applicant.employee
-      image_url = employee.main_image.attached? ? url_for(employee.main_image) : nil
+      image_path = employee.main_image.attached? ? url_for(employee.main_image) : nil
+      image_url = image_path ? "#{base_url}#{URI(image_path).path}" : nil
       employee.as_json.merge(image_url: image_url, created_at: applicant.created_at)
     end
-
+  
     render json: ApplicantDataSerializer.new(applicants).serializable_hash
   end
 

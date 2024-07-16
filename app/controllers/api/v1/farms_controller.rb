@@ -7,24 +7,29 @@ class Api::V1::FarmsController < ApplicationController
       render json: { error: "Farm not found" }, status: :not_found
       return
     end
-
-    image_url = farm.profile_image.attached? ? url_for(farm.profile_image) : nil
-
+  
+    # Set base URL
+    base_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2"
+  
+    # Generate profile image URL
+    image_url = farm.profile_image.attached? ? "#{base_url}#{URI(url_for(farm.profile_image)).path}" : nil
+  
+    # Generate gallery photos URLs
     gallery_photos = if farm.gallery_photos.attached?
                        farm.gallery_photos.map do |photo|
-                         { url: url_for(photo), id: photo.id }
+                         { url: "#{base_url}#{URI(url_for(photo)).path}", id: photo.id }
                        end
                      else
                        []
                      end
-
+  
     farm_data = farm.as_json(only: [:id, :name, :city, :state, :zip_code, :bio]).merge(
       image_url: image_url,
       accommodations: farm.accommodation,
       gallery_photos: gallery_photos,
       postings: farm.postings
     )
-
+  
     render json: FarmProfileSerializer.new(farm_data).serializable_hash
   end
 
@@ -63,7 +68,8 @@ class Api::V1::FarmsController < ApplicationController
   # GET /api/v1/users/:user_id/farms/:id/image
   def show_image
     if @farm.profile_image.attached?
-      image_url = url_for(@farm.profile_image)
+      image_path = url_for(@farm.profile_image)
+      image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(image_path).path}"
       render json: { image_url: image_url }, status: :ok
     else
       render json: { error: "Image not found" }, status: :not_found
@@ -83,7 +89,9 @@ class Api::V1::FarmsController < ApplicationController
   # GET /api/v1/users/:user_id/farms/:id/gallery_photos
   def gallery_photos
     gallery_photo_urls = @farm.gallery_photos.map do |photo|
-      { url: url_for(photo), id: photo.id }
+      image_path = url_for(photo)
+      image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(image_path).path}"
+      { url: image_url, id: photo.id }
     end
 
     render json: { gallery_photos: gallery_photo_urls }, status: :ok
