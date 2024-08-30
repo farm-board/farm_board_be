@@ -79,5 +79,5 @@ config.action_mailer.smtp_settings = {
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
-  config.action_mailer.default_url_options = { protocol: 'exp', host: '10.0.0.15:8081', port: 8081 }
+  config.action_mailer.default_url_options = { protocol: 'com.farmspheredynamics.farmboard', host: '' }
 end
