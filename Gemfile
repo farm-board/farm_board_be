@@ -55,6 +55,8 @@ group :development, :test do
 
   gem "capybara", ">= 3.26"
 
+  gem "simplecov", require: false
+
 end
 
 group :development do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_21_223719) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_05_223443) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -98,6 +98,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_223719) do
     t.index ["user_id"], name: "index_farms_on_user_id"
   end
 
+  create_table "marketplace_postings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.string "price"
+    t.string "description"
+    t.string "condition"
+    t.string "images"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_marketplace_postings_on_user_id"
+  end
+
   create_table "posting_employees", force: :cascade do |t|
     t.bigint "posting_id", null: false
     t.bigint "employee_id", null: false
@@ -157,6 +169,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_223719) do
   add_foreign_key "employees", "users"
   add_foreign_key "experiences", "employees"
   add_foreign_key "farms", "users"
+  add_foreign_key "marketplace_postings", "users"
   add_foreign_key "posting_employees", "employees"
   add_foreign_key "posting_employees", "postings"
   add_foreign_key "postings", "farms"
