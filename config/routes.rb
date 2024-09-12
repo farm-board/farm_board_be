@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resource :feed
+      resource :marketplace_feed
       resources :users do
         resource :farms do
           member do
@@ -33,6 +34,15 @@ Rails.application.routes.draw do
           resources :experiences
           resources :references
           get '/:id/profile_info', to: 'employees#profile_info'
+        end
+        resources :marketplace_postings do
+          member do
+            get 'gallery_photos', to: 'marketplace_postings#gallery_photos'
+            get 'cover_photo', to: 'marketplace_postings#cover_photo'
+          end
+          post 'upload_gallery_photo', to: 'marketplace_postings#upload_gallery_photo'
+          put 'update_gallery_photo', to: 'marketplace_postings#update_gallery_photo'
+          delete 'delete_gallery_photo/:photo_id', to: 'marketplace_postings#delete_gallery_photo'
         end
       end
     end
