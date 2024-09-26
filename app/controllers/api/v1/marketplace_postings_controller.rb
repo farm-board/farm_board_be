@@ -12,14 +12,9 @@ class Api::V1::MarketplacePostingsController < ApplicationController
   end
 
   def create
-    marketplace_posting = MarketplacePosting.new(marketplace_posting_params)
-    marketplace_posting.user_id = params[:user_id]
-  
-    if marketplace_posting.save
-      render json: { id: marketplace_posting.id, message: 'Marketplace posting created successfully' }, status: :created
-    else
-      render json: { errors: marketplace_posting.errors.full_messages }, status: :unprocessable_entity
-    end
+    marketplace_posting_attributes = marketplace_posting_params
+    marketplace_posting = @user.marketplace_postings.create!(marketplace_posting_attributes)
+    render json: MarketplacePostingsSerializer.new(marketplace_posting), status: :created
   end
 
   def update
