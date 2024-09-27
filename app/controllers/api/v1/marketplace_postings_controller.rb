@@ -49,7 +49,7 @@ class Api::V1::MarketplacePostingsController < ApplicationController
 
   # POST /api/v1/users/:user_id/farms/:id/upload_gallery_photo
   def upload_gallery_photo
-    marketplace_posting = @user.marketplace_postings.find_by(id: params[:id])
+    marketplace_posting = @user.marketplace_postings.find_by(id: params[:marketplace_posting_id])
   
     if marketplace_posting.gallery_photos.count >= 6
       render json: { error: "Maximum number of photos reached" }, status: :unprocessable_entity
