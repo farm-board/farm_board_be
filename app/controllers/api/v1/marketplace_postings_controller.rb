@@ -35,7 +35,6 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     head :no_content
   end
 
-  # GET /api/v1/users/:user_id/farms/:id/gallery_photos
   def gallery_photos
     gallery_photo_urls = @user.marketplace_postings.find_by(id: params[:id]).gallery_photos.map do |photo|
       image_path = url_for(photo)
@@ -53,7 +52,6 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     render json: { cover_photo: image_url }, status: :ok
   end
 
-  # POST /api/v1/users/:user_id/farms/:id/upload_gallery_photo
   def upload_gallery_photo
     marketplace_posting = @user.marketplace_postings.find_by(id: params[:marketplace_posting_id])
   
@@ -62,7 +60,6 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     else
       marketplace_posting.gallery_photos.attach(params[:gallery_photo])
       
-      # Save the first image URL to `main_image_url` field if it hasn't been set
       if marketplace_posting.images.nil?
         first_image_path = url_for(marketplace_posting.gallery_photos.first)
         first_image_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2#{URI(first_image_path).path}"
@@ -73,7 +70,6 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     end
   end
 
-  # DELETE /api/v1/users/:user_id/farms/:id/gallery_photos/:photo_id
   def delete_gallery_photo
     photo = @user.marketplace_postings.find_by(id: params[:marketplace_posting_id]).gallery_photos.find_by(id: params[:photo_id])
     if photo
@@ -84,9 +80,8 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     end
   end
 
-  # PATCH /api/v1/users/:user_id/farms/:id/gallery_photos/:photo_id
   def update_gallery_photo
-    photo = @user.marketplace_postings.find_by(id: params[:id]).gallery_photos.find_by(id: params[:photo_id])
+    photo = @user.marketplace_postings.find_by(id: params[:marketplace_posting_id]).gallery_photos.find_by(id: params[:photo_id])
     if photo.update(photo_params)
       render json: { message: "Photo updated successfully" }, status: :ok
     else
