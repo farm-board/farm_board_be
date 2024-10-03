@@ -25,7 +25,13 @@ class Api::V1::MarketplacePostingsController < ApplicationController
 
   def destroy
     marketplace_posting = @user.marketplace_postings.find(params[:id])
+    
+    marketplace_posting.gallery_photos.each do |photo|
+      photo.purge 
+    end
+    
     marketplace_posting.destroy
+    
     head :no_content
   end
 
@@ -69,7 +75,7 @@ class Api::V1::MarketplacePostingsController < ApplicationController
 
   # DELETE /api/v1/users/:user_id/farms/:id/gallery_photos/:photo_id
   def delete_gallery_photo
-    photo = @user.marketplace_postings.find_by(id: params[:id]).gallery_photos.find_by(id: params[:photo_id])
+    photo = @user.marketplace_postings.find_by(id: params[:marketplace_posting_id]).gallery_photos.find_by(id: params[:photo_id])
     if photo
       photo.purge
       render json: { message: "Photo deleted successfully" }, status: :ok
