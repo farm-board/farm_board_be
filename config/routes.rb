@@ -43,8 +43,8 @@ Rails.application.routes.draw do
           post 'upload_gallery_photo', to: 'marketplace_postings#upload_gallery_photo'
           put 'update_gallery_photo', to: 'marketplace_postings#update_gallery_photo'
           delete 'delete_gallery_photo/:photo_id', to: 'marketplace_postings#delete_gallery_photo'
-          delete 'delete_all_postings', to: 'marketplace_postings#delete_all_postings'
         end
+        delete 'delete_all_postings', to: 'marketplace_postings#delete_all_postings'
       end
     end
   end
