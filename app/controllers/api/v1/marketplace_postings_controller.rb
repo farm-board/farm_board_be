@@ -1,6 +1,18 @@
 class Api::V1::MarketplacePostingsController < ApplicationController
   before_action :get_user
 
+  def profile_info
+    user = User.includes(:marketplace_postings).find_by(id: params[:id])
+    if user.farm?
+
+    end
+  end
+
+  def delete_all_postings
+    MarketplacePostings.destroy_all
+    head :no_content
+  end
+
   def index
     marketplace_postings = @user.marketplace_postings
     render json: MarketplacePostingsSerializer.new(marketplace_postings)
