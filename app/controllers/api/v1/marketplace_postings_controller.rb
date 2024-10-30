@@ -9,7 +9,7 @@ class Api::V1::MarketplacePostingsController < ApplicationController
   end
 
   def delete_all_postings
-    MarketplacePostings.destroy_all
+    MarketplacePosting.destroy_all
     head :no_content
   end
 
