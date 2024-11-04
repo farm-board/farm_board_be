@@ -1,11 +1,28 @@
 class Api::V1::MarketplacePostingsController < ApplicationController
   before_action :get_user
 
-  def profile_info
-    user = User.includes(:marketplace_postings).find_by(id: params[:id])
-    if user.farm?
-
+  def user_image
+    marketplace_posting = MarketplacePosting.includes(user: [:farm, :employee]).find_by(id: params[:marketplace_posting_id])
+    if marketplace_posting.nil?
+      render json: { error: "Marketplace posting not found" }, status: :not_found
+      return
     end
+    
+    user = marketplace_posting.user
+  
+    # Set base URL
+    base_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2"
+  
+    # Determine the profile image URL based on user role
+    image_url = if user.farm.present? && user.farm.profile_image.attached?
+                  "#{base_url}#{URI(url_for(user.farm.profile_image)).path}"
+                elsif user.employee.present? && user.employee.image.present?
+                  "#{base_url}#{URI(url_for(user.employee.image)).path}"
+                else
+                  nil
+                end
+  
+    render json: { image_url: image_url }
   end
 
   def delete_all_postings
