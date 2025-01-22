@@ -44,6 +44,7 @@ Rails.application.routes.draw do
           put 'update_gallery_photo', to: 'marketplace_postings#update_gallery_photo'
           delete 'delete_gallery_photo/:photo_id', to: 'marketplace_postings#delete_gallery_photo'
           get '/user_image', to: 'marketplace_postings#user_image'
+          get '/profile_info', to: 'marketplace_postings#profile_info'
         end
         delete 'delete_all_postings', to: 'marketplace_postings#delete_all_postings'
       end
