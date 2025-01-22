@@ -7,7 +7,7 @@ class Api::V1::MarketplacePostingsController < ApplicationController
       render json: { error: "Marketplace posting not found" }, status: :not_found
       return
     end
-    
+
     user = marketplace_posting.user
   
     # Set base URL
@@ -16,13 +16,56 @@ class Api::V1::MarketplacePostingsController < ApplicationController
     # Determine the profile image URL based on user role
     image_url = if user.farm.present? && user.farm.profile_image.attached?
                   "#{base_url}#{URI(url_for(user.farm.profile_image)).path}"
-                elsif user.employee.present? && user.employee.image.present?
-                  "#{base_url}#{URI(url_for(user.employee.image)).path}"
+                elsif user.employee.present? && user.employee.main_image.present?
+                  "#{base_url}#{URI(url_for(user.employee.main_image)).path}"
                 else
                   nil
                 end
   
     render json: { image_url: image_url }
+  end
+
+  def profile_info
+    marketplace_posting = MarketplacePosting.includes(user: [:farm, :employee]).find_by(id: params[:marketplace_posting_id])
+    posting_user = marketplace_posting.user
+    if posting_user.farm.present?
+      farm = posting_user.farm
+      if farm.nil?
+        render json: { error: "Farm not found" }, status: :not_found
+        return
+      end
+    
+
+      base_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2"
+    
+      image_url = farm.profile_image.attached? ? "#{base_url}#{URI(url_for(farm.profile_image)).path}" : nil
+    
+      user_data = farm.as_json(only: [:id, :name, :city, :state, :zip_code, :bio, :marketplace_email, :marketplace_phone]).merge(
+        image_url: image_url,
+        marketplace_postings: posting_user.marketplace_postings
+      )
+    
+      render json: MarketplaceFarmProfileSerializer.new(user_data).serializable_hash
+    else
+      employee = posting_user.employee
+      if employee.nil?
+        render json: { error: "Employee not found" }, status: :not_found
+        return
+      end
+    
+
+      base_url = "https://walrus-app-bfv5e.ondigitalocean.app/farm-board-be2"
+    
+
+      image_url = employee.main_image.attached? ? "#{base_url}#{URI(url_for(employee.main_image)).path}" : nil
+    
+      user_data = employee.as_json.merge(
+        image_url: image_url,
+        marketplace_postings: posting_user.marketplace_postings
+      )
+    
+      render json: MarketplaceEmployeeProfileSerializer.new(user_data).serializable_hash
+    end
   end
 
   def delete_all_postings

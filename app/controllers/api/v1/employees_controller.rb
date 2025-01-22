@@ -68,7 +68,7 @@ class Api::V1::EmployeesController < ApplicationController
   def employee_params
     params.require(:employee).permit(
       :first_name, :last_name, :city, :state, :zip_code, :bio, :age, :main_image, 
-      :phone, :email, :setup_complete, skills: []
+      :phone, :email, :setup_complete, :marketplace_email, :marketplace_phone, skills: []
     )
   end
 end

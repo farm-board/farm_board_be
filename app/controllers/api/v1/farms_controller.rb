@@ -136,7 +136,7 @@ class Api::V1::FarmsController < ApplicationController
   end
 
   def farm_params
-    params.require(:farm).permit(:name, :city, :state, :zip_code, :bio, :setup_complete)
+    params.require(:farm).permit(:name, :city, :state, :zip_code, :bio, :marketplace_email, :marketplace_phone, :setup_complete)
   end
 
   def photo_params
