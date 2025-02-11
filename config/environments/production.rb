@@ -64,6 +64,13 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "farm_board_be_production"
 
+  config.action_controller.raise_on_missing_callback_actions = true
+  
+  config.action_mailer.default_url_options = {
+    host: 'walrus-app-bfv5e.ondigitalocean.app',
+    protocol: 'https'
+  }
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
