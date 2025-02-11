@@ -81,7 +81,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {
     host: 'walrus-app-bfv5e.ondigitalocean.app',
     protocol: 'https',
-    from: 'no-reply@mailtrap.io'
+    from: 'no-reply@farmspheredynamics.com'
   }
 
   config.action_mailer.perform_caching = false
