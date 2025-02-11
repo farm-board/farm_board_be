@@ -92,6 +92,7 @@ config.action_mailer.smtp_settings = {
   
   config.action_mailer.default_url_options = {
     host: 'walrus-app-bfv5e.ondigitalocean.app',
-    protocol: 'https'
+    protocol: 'https',
+    from: 'no-reply@farmspheredynamics.com'
   }
 end
