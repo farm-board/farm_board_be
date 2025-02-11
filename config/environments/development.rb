@@ -79,6 +79,17 @@ config.action_mailer.smtp_settings = {
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
+  config.action_mailer.delivery_method = :smtp
+  
+  config.action_mailer.smtp_settings = {
+    user_name: ENV['MAILTRAP_USERNAME'],
+    password: ENV['MAILTRAP_PASSWORD'],
+    address: 'live.smtp.mailtrap.io',
+    host: 'live.smtp.mailtrap.io',
+    port: '587',
+    authentication: :login
+  }
+  
   config.action_mailer.default_url_options = {
     host: 'walrus-app-bfv5e.ondigitalocean.app',
     protocol: 'https'
