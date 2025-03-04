@@ -1,4 +1,4 @@
 class MarketplacePosting < ApplicationRecord
   belongs_to :user
-  has_many_attached :gallery_photos
+  has_many_attached :gallery_photos, dependent: :destroy
 end

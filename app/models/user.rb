@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
-  has_one :farm
-  has_one :employee
-  has_many :marketplace_postings
+  has_one :farm, dependent: :destroy
+  has_one :employee, dependent: :destroy
+  has_many :marketplace_postings, dependent: :destroy
   enum role_type: { no_role: 0, farm: 1, employee: 2 }
 
   # Include default devise modules. Others available are:
