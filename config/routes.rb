@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         member do
           get :gallery_photos
           get :cover_photo
+          get :user_image
         end
       end
     end
