@@ -2,7 +2,7 @@ class Api::V1::MarketplacePostingsController < ApplicationController
   before_action :get_user
 
   def user_image
-    marketplace_posting = MarketplacePosting.includes(user: [:farm, :employee]).find_by(id: params[:marketplace_posting_id])
+    marketplace_posting = MarketplacePosting.includes(user: [:farm, :employee]).find_by(id: params[:id])
     if marketplace_posting.nil?
       render json: { error: "Marketplace posting not found" }, status: :not_found
       return
