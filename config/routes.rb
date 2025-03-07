@@ -48,6 +48,17 @@ Rails.application.routes.draw do
         end
         delete 'delete_all_postings', to: 'marketplace_postings#delete_all_postings'
       end
+      resources :farms, only: [] do
+        member do
+          get :profile_info
+        end
+      end
+      resources :marketplace_postings, only: [] do
+        member do
+          get :gallery_photos
+          get :cover_photo
+        end
+      end
     end
   end
 end
