@@ -1,5 +1,5 @@
 class Api::V1::MarketplacePostingsController < ApplicationController
-  before_action :get_user
+  before_action :get_user, except: [:user_image]
 
   def user_image
     marketplace_posting = MarketplacePosting.includes(user: [:farm, :employee]).find_by(id: params[:id])
