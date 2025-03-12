@@ -317,7 +317,8 @@ Devise.setup do |config|
       ['PATCH', %r{^/current_user/update$}]
     ]
     jwt.revocation_requests = [
-      ['DELETE', %r{^/logout$}]
+      ['DELETE', %r{^/logout$}],
+      ['DELETE', %r{^/farm-board-be2/logout$}]
     ]
     jwt.expiration_time = 1.day.to_i
   end
