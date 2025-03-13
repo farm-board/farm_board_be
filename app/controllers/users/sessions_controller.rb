@@ -36,6 +36,10 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
+
+    reset_session
+    cookies.delete(:_yourapp_session)
+
     if current_user
       render json: {
         status: { code: 200, message: 'Logged out successfully.' }
