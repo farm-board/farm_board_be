@@ -2,6 +2,7 @@
 
 class Users::SessionsController < Devise::SessionsController
   include RackSessionFix
+  include ActionController::Cookies
   respond_to :json
   # before_action :configure_sign_in_params, only: [:create]
 
@@ -21,8 +22,6 @@ class Users::SessionsController < Devise::SessionsController
     token = request.env['warden-jwt_auth.token']  # or parse from headers
     if token.present?
       begin
-        # Devise normally auto-revokes on valid tokens,
-        # but you can do a manual call if needed:
         Warden::JWTAuth::RevocationStrategies::JTI.revoke_jwt(token, nil)
       rescue StandardError => e
         Rails.logger.error "JWT revocation failed: #{e.message}"
@@ -30,8 +29,11 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     # 2) Force sign out from any Devise session scope
-    sign_out(:user)  # or sign_out_all_scopes if you want
-    reset_session     # kills the Rails session
+    sign_out(:user)  # sign_out_all_scopes 
+    Rails.logger.info "Session before reset: #{session.inspect}"
+    reset_session # clear session data
+    Rails.logger.info "Session after reset: #{session.inspect}"
+    cookies.delete(:_farm_board_be_session)  # clear cookies
 
     # 3) Return a success response no matter what
     render json: { status: { code: 200, message: 'Logged out successfully' } }, status: :ok
