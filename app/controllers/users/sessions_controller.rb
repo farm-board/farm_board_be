@@ -16,9 +16,26 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    # 1) Attempt to revoke the JWT if present/valid
+    token = request.env['warden-jwt_auth.token']  # or parse from headers
+    if token.present?
+      begin
+        # Devise normally auto-revokes on valid tokens,
+        # but you can do a manual call if needed:
+        Warden::JWTAuth::RevocationStrategies::JTI.revoke_jwt(token, nil)
+      rescue StandardError => e
+        Rails.logger.error "JWT revocation failed: #{e.message}"
+      end
+    end
+
+    # 2) Force sign out from any Devise session scope
+    sign_out(:user)  # or sign_out_all_scopes if you want
+    reset_session     # kills the Rails session
+
+    # 3) Return a success response no matter what
+    render json: { status: { code: 200, message: 'Logged out successfully' } }, status: :ok
+  end
 
   # protected
 
@@ -36,8 +53,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    reset_session
-
     if current_user
       render json: {
         status: { code: 200, message: 'Logged out successfully.' }
