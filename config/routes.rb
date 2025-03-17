@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get 'current_user', to: 'current_user#index'
   patch 'current_user/update', to: 'current_user#update'
-  devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout', sign_up: 'signup' }, controllers: { sessions: 'users/sessions', registrations: 'users/registrations' }
+  devise_for :users, skip: [:sessions], path: '', controllers: { sessions: 'users/sessions', registrations: 'users/registrations' }
+  devise_scope :user do
+    post  '/login',  to: 'users/sessions#create'
+    delete '/logout', to: 'users/sessions#destroy'
+  end
   namespace :api do
     namespace :v1 do
       resource :feed
