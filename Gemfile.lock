@@ -160,6 +160,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
+    json (2.10.2)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
     jwt (2.10.1)
@@ -218,6 +219,8 @@ GEM
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
+    profanity-filter (1.0)
+      webpurify
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -316,6 +319,8 @@ GEM
       dry-configurable (>= 0.13, < 2)
       jwt (~> 2.1)
       warden (~> 1.2)
+    webpurify (1.0.2)
+      json
     websocket-driver (0.7.7)
       base64
       websocket-extensions (>= 0.1.0)
@@ -342,6 +347,7 @@ DEPENDENCIES
   jsonapi-serializer
   kaminari
   pg (~> 1.1)
+  profanity-filter
   pry (~> 0.14.2)
   puma (>= 5.0)
   rack-cors

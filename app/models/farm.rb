@@ -5,4 +5,5 @@ class Farm < ApplicationRecord
   has_many :posting_employees, through: :postings, dependent: :destroy
   has_one_attached :profile_image, dependent: :destroy
   has_many_attached :gallery_photos, dependent: :destroy
+  validates :name, :city, :state, :zip_code, :bio, profanity: true
 end

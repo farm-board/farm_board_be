@@ -45,15 +45,25 @@ class Api::V1::PostingsController < ApplicationController
   end
 
   def create
-    posting_attributes = posting_params
-    posting = @farm.postings.create!(posting_attributes)
-    render json: PostingsSerializer.new(posting), status: :created
+    posting = @farm.postings.new(posting_params)
+  
+    if posting.save   
+      render json: PostingsSerializer.new(posting), status: :created
+    else
+      render json: { errors: posting.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def update
     posting = @farm.postings.find(params[:id])
-    posting.update!(posting_params)
-    render json: PostingsSerializer.new(posting), status: :accepted
+  
+    if posting.update(posting_params)            # ← no bang
+      render json: PostingsSerializer.new(posting), status: :accepted
+    else
+      render json: { errors: posting.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def destroy
