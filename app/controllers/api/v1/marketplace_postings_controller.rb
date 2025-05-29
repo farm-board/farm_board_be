@@ -84,16 +84,27 @@ class Api::V1::MarketplacePostingsController < ApplicationController
   end
 
   def create
-    marketplace_posting_attributes = marketplace_posting_params
-    marketplace_posting = @user.marketplace_postings.create!(marketplace_posting_attributes)
-    render json: MarketplacePostingsSerializer.new(marketplace_posting), status: :created
+    marketplace_posting = @user.marketplace_postings.new(marketplace_posting_params)
+
+    if marketplace_posting.save
+      render json: MarketplacePostingsSerializer.new(marketplace_posting), status: :created
+    else
+      render json: { errors: marketplace_posting.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def update
     marketplace_posting = @user.marketplace_postings.find(params[:id])
-    marketplace_posting.update!(marketplace_posting_params)
-    render json: MarketplacePostingsSerializer.new(marketplace_posting), status: :accepted
+    if marketplace_posting.update(marketplace_posting_params)   # ← non-bang
+      render json: MarketplacePostingsSerializer.new(marketplace_posting),
+             status: :accepted
+    else
+      render json: { errors: marketplace_posting.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
+
 
   def destroy
     marketplace_posting = @user.marketplace_postings.find(params[:id])
